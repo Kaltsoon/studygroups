@@ -1,0 +1,27 @@
+<ol class="breadcrumb">
+  <li><a ng-href="#/study-groups/{{group.id}}/{{group.key}}"><i class="fa fa-home" style="margin-right: 6px;"></i>{{group.name}}</a></li>
+  <li class="active">Create a page</li>
+</ol>
+
+<div class="page-header">
+  <h1>Create a page for study group "{{group.name}}"</h1>
+</div>
+
+<form>
+  <div class="form-group">
+    <label>Title</label>
+    <input type="text" required class="form-control" ng-model="newPage.title">
+  </div>
+
+  <div class="form-group">
+    <label>Content</label>
+    <p class="text-muted">
+      Tip: you can use <a href="http://markdowntutorial.com/" target="_blank">markdown</a> in this field.
+    </p>
+    <textarea class="form-control" ng-model="newPage.content" rows="20"></textarea>
+  </div>
+
+  <div class="form-group">
+    <button class="btn btn-success" type="submit" ng-click="createPage()">Create</button>
+  </div>
+</form>

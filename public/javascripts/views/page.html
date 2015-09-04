@@ -1,0 +1,66 @@
+<ol class="breadcrumb">
+  <li><a ng-href="#/study-groups/{{page.StudyGroup.id}}/{{page.StudyGroup.key}}"><i class="fa fa-home" style="margin-right: 6px;"></i>{{page.StudyGroup.name}}</a></li>
+  <li class="active">{{page.title}}</li>
+</ol>
+
+<div class="page-header button-header">
+  <h1>{{page.title}}</h1>
+
+  <button class="btn btn-danger pull-right" ng-click="removePage()">
+    <i class="fa fa-times"></i> Remove page
+  </button>
+
+  <button class="btn btn-default pull-right" ng-click="toggleEditing()" style="margin-right: 10px">
+    <i class="fa fa-pencil"></i> Edit page
+  </button>
+</div>
+
+<div class="row">
+  <div class="col-md-9">
+    <p class="text-muted">
+      Created at {{page.createdAt | amDateFormat:'dddd, MMMM Do YYYY' }} · Latest update <span am-time-ago="page.updatedAt"></span>
+    </p>
+
+    <div ng-show="isEditing">
+      <form ng-submit="updatePage()">
+        <div class="form-group">
+          <label>Title</label>
+          <input type="text" required class="form-control" ng-model="editedPage.title">
+        </div>
+        <div class="form-group">
+          <label>Content</label>
+          <p class="text-muted">
+            Tip: you can use <a href="http://markdowntutorial.com/" target="_blank">markdown</a> in this field.
+          </p>
+          <textarea rows="25" required class="form-control" ng-model="editedPage.content"></textarea>
+        </div>
+        <div class="form-group">
+          <button type="submit" class="btn btn-default">Save</button>
+        </div>
+      </form>
+    </div>
+
+    <p btf-markdown="page.content"></p>
+  </div>
+
+  <div class="col-md-3">
+    <div class="alert alert-info" ng-hide="page.StudyGroup.Pages.length > 0">
+      You don't have any pages yet. Would you like to <a href="#/study-groups/{{group.id}}/new-page">create a page</a>?
+    </div>
+
+    <div ng-show="page.StudyGroup.Pages.length > 0">
+      <h4>Pages</h4>
+      <ul class="nav nav-pills nav-stacked" style="margin-bottom: 10px">
+        <li ng-repeat="p in page.StudyGroup.Pages" ng-class="{ 'active': p.id == page.id }">
+          <a ng-href="#/study-groups/{{p.StudyGroup.id}}/{{p.StudyGroup.key}}/pages/{{p.id}}">{{p.title}}</a>
+        </li>
+      </ul>
+    </div>
+
+    <p>
+      <a ng-href="#/study-groups/{{page.StudyGroup.id}}/{{page.StudyGroup.key}}/new-page" class="btn btn-success btn-block" ng-if="userSignedIn.id == page.StudyGroup.User.id">
+        <i class="fa fa-plus"></i> Create a page
+      </a>
+    </p>
+  </div>
+</div>

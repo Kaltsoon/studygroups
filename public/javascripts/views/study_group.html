@@ -1,0 +1,78 @@
+<ol class="breadcrumb">
+  <li class="acitve"><i class="fa fa-home" style="margin-right: 6px;"></i>{{group.name}}</li>
+</ol>
+
+<div class="page-header button-header">
+  <h1>{{group.name}}</h1>
+
+  <button class="btn btn-danger pull-right" ng-click="removeStudyGroup()" ng-if="userSignedIn.id == group.User.id">
+    <i class="fa fa-times"></i> Remove study group
+  </button>
+
+  <button class="btn btn-default pull-right" ng-click="toggleEditing()" style="margin-right: 10px" ng-if="userSignedIn.id == group.User.id">
+    <i class="fa fa-pencil"></i> Edit study group
+  </button>
+</div>
+
+<div class="row">
+  <div class="col-md-9">
+    <p class="text-muted">
+      Owned by {{group.User.username}} · Created at {{group.createdAt | amDateFormat:'dddd, MMMM Do YYYY' }} · Latest update <span am-time-ago="group.updatedAt"></span>
+    </p>
+
+    <p class="text-muted">
+      Readers:
+    </p>
+
+    <p>
+      <img gravatar-src-once="reader.User.email" class="mini-portrait" style="margin: 1px" ng-repeat="reader in group.Readers" tooltip content="reader.User.username">
+    </p>
+
+    <div class="form-group" ng-if="userSignedIn.id == group.User.id">
+      <label>Share URL</label>
+      <input type="text" ng-model="shareUrl" class="form-control">
+    </div>
+
+    <div ng-show="isEditing">
+      <form ng-submit="updateStudyGroup()">
+        <div class="form-group">
+          <label>Name</label>
+          <input type="text" required class="form-control" ng-model="editedGroup.name">
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <p class="text-muted">
+            Tip: you can use <a href="http://markdowntutorial.com/" target="_blank">markdown</a> in this field.
+          </p>
+          <textarea rows="10" required class="form-control" ng-model="editedGroup.description"></textarea>
+        </div>
+        <div class="form-group">
+          <button type="submit" class="btn btn-default">Save</button>
+        </div>
+      </form>
+    </div>
+
+    <p btf-markdown="group.description"></p>
+
+  </div>
+  <div class="col-md-3">
+    <div class="alert alert-info" ng-hide="group.Pages.length > 0">
+      You don't have any pages yet. Would you like to <a href="#/study-groups/{{group.id}}/new-page">create a page</a>?
+    </div>
+
+    <div ng-show="group.Pages.length > 0">
+      <h4>Pages</h4>
+      <ul class="nav nav-pills nav-stacked" style="margin-bottom: 10px">
+        <li ng-repeat="page in group.Pages">
+          <a ng-href="#/study-groups/{{group.id}}/{{group.key}}/pages/{{page.id}}">{{page.title}}</a>
+        </li>
+      </ul>
+    </div>
+
+    <p>
+      <a ng-href="#/study-groups/{{group.id}}/{{group.key}}/new-page" class="btn btn-success btn-block" ng-if="userSignedIn.id == group.User.id">
+        <i class="fa fa-plus"></i> Create a page
+      </a>
+    </p>
+  </div>
+</div>
