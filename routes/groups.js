@@ -8,23 +8,22 @@ var User = require('../models').User;
 var Reader = require('../models').Reader;
 
 router.get('/', auth.confirmUserSignedIn, function(req, res, next) {
-  StudyGroup.findAll({
-    where: { UserId: req.session.userId },
-    include: [{ model: Page, attributes: ['title', 'id'] }, { model: User }, { model: Reader, attributes: ['UserId'] }]
-  })
-    .then(function(groups){
-      res.json(groups);
-    })
-});
+  StudyGroup.scope({ method: ['ownedByUser', req.session.userId] }).findAll()
+    .then(function(allGroups){
+      Reader.findAll({
+        where: { UserId: req.session.userId },
+        include: { model: StudyGroup, include: [{ model: Page, attributes: ['title', 'id'] }, { model: User }, { model: Reader, attributes: ['UserId'] }] }
+      })
+        .then(function(readGroups){
+          readGroups = readGroups || [];
+          readGroups.forEach(function(group){ allGroups.push(group.StudyGroup) });
 
-router.get('/plaa', function(req, res, next){
-  Reader.findAll()
-    .then(function(readers){
-      res.json(readers);
+          res.json(_.uniq(allGroups, function(group){ return group.id }));
+        });
     });
 });
 
-router.get('/:id/:key', function(req, res, next){
+router.get('/:id/:key', auth.confirmUserSignedIn, function(req, res, next){
   StudyGroup.findOne({
     where: { id: req.params.id, key: req.params.key },
     include: [{ model: Page, attributes: ['title', 'id'] }, { model: User }, { model: Reader, include: { model: User }}]
@@ -44,7 +43,7 @@ router.get('/:id/:key', function(req, res, next){
     });
 });
 
-router.get('/:id/pages/:pageId', function(req, res, next){
+router.get('/:id/pages/:pageId', auth.confirmUserSignedIn, function(req, res, next){
   Page.findOne({
     where: { id: req.params.pageId },
     include: { model: StudyGroup, include: { model: Page, attributes: ['title', 'id'] } }
@@ -65,7 +64,7 @@ router.post('/create', auth.confirmUserSignedIn, function(req, res, next){
     });
 });
 
-router.post('/:id/remove', function(req, res, next){
+router.post('/:id/remove', auth.confirmUserSignedIn, auth.confirmStudyGroupOwner, function(req, res, next){
   Page.destroy({ where: { StudyGroupId: req.params.id } });
 
   StudyGroup.destroy({ where: { id: req.params.id } })
@@ -74,7 +73,7 @@ router.post('/:id/remove', function(req, res, next){
     });
 });
 
-router.post('/:id/update', function(req, res, next){
+router.post('/:id/update', auth.confirmUserSignedIn, auth.confirmStudyGroupOwner, function(req, res, next){
   var editedGroup = req.body;
 
   StudyGroup.update(editedGroup, { where: { id: req.params.id } })

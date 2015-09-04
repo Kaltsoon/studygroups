@@ -22,6 +22,15 @@ var StudyGroup = Database.sequelize.define('StudyGroup', {
   name: Database.DataTypes.STRING,
   description: Database.DataTypes.TEXT,
   key: Database.DataTypes.TEXT
+}, {
+  scopes: {
+    ownedByUser: function(userId){
+      return {
+        where: { UserId: userId },
+        include: [{ model: Page, attributes: ['title', 'id'] }, { model: User }, { model: Reader, attributes: ['UserId'] }]
+      }
+    }
+  }
 });
 
 Reader.belongsTo(User);

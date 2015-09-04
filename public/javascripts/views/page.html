@@ -6,11 +6,11 @@
 <div class="page-header button-header">
   <h1>{{page.title}}</h1>
 
-  <button class="btn btn-danger pull-right" ng-click="removePage()">
+  <button class="btn btn-danger pull-right" ng-click="removePage()" ng-if="userSignedIn.id == page.StudyGroup.User.id">
     <i class="fa fa-times"></i> Remove page
   </button>
 
-  <button class="btn btn-default pull-right" ng-click="toggleEditing()" style="margin-right: 10px">
+  <button class="btn btn-default pull-right" ng-class="{ 'active': isEditing }" ng-click="toggleEditing()" style="margin-right: 10px" ng-if="userSignedIn.id == page.StudyGroup.User.id">
     <i class="fa fa-pencil"></i> Edit page
   </button>
 </div>
@@ -40,11 +40,11 @@
       </form>
     </div>
 
-    <p btf-markdown="page.content"></p>
+    <p btf-markdown="page.content" ng-hide="isEditing"></p>
   </div>
 
   <div class="col-md-3">
-    <div class="alert alert-info" ng-hide="page.StudyGroup.Pages.length > 0">
+    <div class="alert alert-info" ng-hide="page.StudyGroup.Pages.length > 0" ng-if="userSignedIn.id == page.StudyGroup.User.id">
       You don't have any pages yet. Would you like to <a href="#/study-groups/{{group.id}}/new-page">create a page</a>?
     </div>
 

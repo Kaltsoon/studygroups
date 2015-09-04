@@ -9,7 +9,7 @@
     <i class="fa fa-times"></i> Remove study group
   </button>
 
-  <button class="btn btn-default pull-right" ng-click="toggleEditing()" style="margin-right: 10px" ng-if="userSignedIn.id == group.User.id">
+  <button class="btn btn-default pull-right" ng-class="{ 'active': isEditing }" ng-click="toggleEditing()" style="margin-right: 10px" ng-if="userSignedIn.id == group.User.id">
     <i class="fa fa-pencil"></i> Edit study group
   </button>
 </div>
@@ -52,11 +52,11 @@
       </form>
     </div>
 
-    <p btf-markdown="group.description"></p>
+    <p btf-markdown="group.description" ng-hide="isEditing"></p>
 
   </div>
   <div class="col-md-3">
-    <div class="alert alert-info" ng-hide="group.Pages.length > 0">
+    <div class="alert alert-info" ng-hide="group.Pages.length > 0" ng-if="userSignedIn.id == group.User.id">
       You don't have any pages yet. Would you like to <a href="#/study-groups/{{group.id}}/new-page">create a page</a>?
     </div>
 
