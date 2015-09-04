@@ -13,14 +13,14 @@
     "express": "~4.12.4",
     "express-session": "1.11.3",
     "jade": "~1.9.2",
-    "lodash": "^3.10.1",
+    "lodash": "3.10.1",
     "morgan": "~1.5.3",
-    "password-hash": "^1.2.2",
-    "sequelize": "^3.6.0",
-    "serve-favicon": "~2.2.1",
-    "sqlite3": "^3.0.10"
+    "password-hash": "1.2.2",
+    "sequelize": "3.6.0",
+    "serve-favicon": "~2.2.1"
   },
   "devDependencies": {
+    "sqlite3": "3.0.10",
     "gulp": "^3.9.0",
     "gulp-concat": "^2.6.0",
     "gulp-less": "^3.0.3",
