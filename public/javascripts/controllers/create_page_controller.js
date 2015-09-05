@@ -1,9 +1,13 @@
-StudyGroupsApp.controller('CreatePageController', function($scope, $location, $routeParams, Api){
+StudyGroupsApp.controller('CreatePageController', function($scope, $location, $rootScope, $routeParams, Api){
   $scope.newPage = {};
 
   Api.getStudyGroup($routeParams.id, $routeParams.key)
     .then(function(group){
       $scope.group = group.data;
+
+      if($scope.group.UserId != $rootScope.userSignedIn.id){
+        $location.path('/study-groups');
+      }
     });
 
   $scope.createPage = function(){

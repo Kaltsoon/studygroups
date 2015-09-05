@@ -11,6 +11,7 @@ var users = require('./routes/users');
 var studyGroups = require('./routes/groups');
 var pages = require('./routes/pages');
 var highlights = require('./routes/highlights');
+var chatMessages = require('./routes/chat_messages');
 
 var app = express();
 
@@ -36,6 +37,7 @@ app.use('/users', users);
 app.use('/study-groups', studyGroups);
 app.use('/pages', pages);
 app.use('/highlights', highlights);
+app.use('/chat-messages', chatMessages);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

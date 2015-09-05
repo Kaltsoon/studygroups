@@ -7,6 +7,18 @@ StudyGroupsApp.service('Api', function($http){
     return $http.get('/users/' + username);
   }
 
+  this.updateUser = function(user){
+    return $http.post('/users/' + user.id + '/update', user);
+  }
+
+  this.removeUser = function(id){
+    return $http.post('/users/' + id + '/remove');
+  }
+
+  this.getChatMessages = function(groupId){
+    return $http.get('/chat-messages/from-group/' + groupId);
+  }
+
   this.getUsersStudyGroups = function(){
     return $http.get('/study-groups');
   }

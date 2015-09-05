@@ -25,13 +25,39 @@
     </div>
 </span>
 
+<div class="panel" ng-class="{ 'panel-default': alertCounter == 0, 'panel-primary': alertCounter > 0 }" id="chat-container" ng-controller="ChatController">
+  <div class="panel-heading" ng-click="toggleChat()">
+    <h3 class="panel-title"><i class="fa fa-comments"></i> {{page.StudyGroup.name}} chat <span class="pull-right" ng-show="alertCounter > 0"><i class="fa fa-bell"></i> {{alertCounter}}</span></h3>
+  </div>
+  <div class="panel-body" ng-show="chatIsShowing">
+    <div id="chat-messages">
+      <div class="media" ng-repeat="message in messages | orderBy: '-createdAt'">
+        <div class="media-left">
+          <img gravatar-src-once="message.User.email" class="mini-portrait media-object" gravatar-size="30" style="margin-right: 2px;">
+        </div>
+        <div class="media-body">
+          <p>
+            <a ng-href="#/profile/{{message.User.username}}">{{message.User.username}}</a>:
+            {{message.text}}
+            <span am-time-ago="message.createdAt" class="text-muted"></span>
+          </p>
+        </div>
+      </div>
+    </div>
+    <form ng-submit="sendChatMessage()">
+      <input type="text" required class="form-control" placeholder="Type your message here..." ng-model="newMessage">
+      <button type="submit" style="display: none"></button>
+    </form>
+  </div>
+</div>
+
 <div class="row">
   <div class="col-md-9">
     <p class="text-muted">
       Created at {{page.createdAt | amDateFormat:'MMMM Do YYYY' }} · Latest update <span am-time-ago="page.updatedAt"></span>
     </p>
 
-    <div ng-show="isEditing">
+    <div ng-show="isEditing" ng-if="userSignedIn.id == page.StudyGroup.User.id">
       <form ng-submit="updatePage()">
         <div class="form-group">
           <label>Title</label>
@@ -54,6 +80,7 @@
       <p>
         <button class="btn btn-warning" ng-if="userSignedIn.id == page.StudyGroup.User.id" ng-click="removeHighlightings()"><i class="fa fa-eraser"></i> Clear highlightings</button>
       </p>
+
       <p btf-markdown="page.content" highlighter highlight-content="page.content" currently-highlighted-section="currentlyHighlightedSection" highlighted-sections="page.Highlights"></p>
     </div>
   </div>

@@ -14,7 +14,7 @@ var User = Database.sequelize.define('User', {
     validate: {
       len: { args: [3,15], msg: 'Username length should be between 3 and 15 characters.' },
       isUnique: function(username, next){
-        User.findOne({ username: username })
+        User.findOne({ where: { username: username } })
           .then(function(userWithSameUsername){
             if(userWithSameUsername){
               next('Username has already been taken.');
@@ -26,7 +26,8 @@ var User = Database.sequelize.define('User', {
     },
     unique: true
   },
-  password: { type: Database.DataTypes.STRING, validate: { len: { args: [5,100], msg: 'Password length should be at least 5 characters.' } } }
+  password: { type: Database.DataTypes.STRING, validate: { len: { args: [5,100], msg: 'Password length should be at least 5 characters.' } } },
+  description: Database.DataTypes.TEXT
 });
 
 var Reader = Database.sequelize.define('Reader', {
@@ -55,18 +56,27 @@ var Highlight = Database.sequelize.define('Highlight', {
   type: { type: Database.DataTypes.STRING, validate: { isIn: [['success', 'warning', 'danger']] } }
 });
 
-Reader.belongsTo(User);
-Reader.belongsTo(StudyGroup);
-Page.belongsTo(StudyGroup);
-StudyGroup.belongsTo(User);
-Highlight.belongsTo(User);
-Highlight.belongsTo(Page);
+var ChatMessage = Database.sequelize.define('ChatMessage', {
+  id: { type: Database.DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
+  text: { type: Database.DataTypes.TEXT, validate: { notEmpty: true } }
+});
 
-StudyGroup.hasMany(Page);
-StudyGroup.hasMany(Reader);
-User.hasMany(StudyGroup);
-User.hasMany(Highlight);
-Page.hasMany(Highlight);
+Reader.belongsTo(User, { onDelete: 'CASCADE' });
+Reader.belongsTo(StudyGroup, { onDelete: 'CASCADE' });
+Page.belongsTo(StudyGroup, { onDelete: 'CASCADE' });
+StudyGroup.belongsTo(User, { onDelete: 'CASCADE' });
+Highlight.belongsTo(User, { onDelete: 'CASCADE' });
+Highlight.belongsTo(Page, { onDelete: 'CASCADE' });
+ChatMessage.belongsTo(User, { onDelete: 'CASCADE' });
+ChatMessage.belongsTo(StudyGroup, { onDelete: 'CASCADE' });
+
+StudyGroup.hasMany(Page, { onDelete: 'CASCADE' });
+StudyGroup.hasMany(Reader, { onDelete: 'CASCADE' });
+StudyGroup.hasMany(ChatMessage, { onDelete: 'CASCADE' });
+User.hasMany(StudyGroup, { onDelete: 'CASCADE' });
+User.hasMany(ChatMessage, { onDelete: 'CASCADE' });
+User.hasMany(Highlight, { onDelete: 'CASCADE' });
+Page.hasMany(Highlight, { onDelete: 'CASCADE' });
 
 module.exports = {
   StudyGroup: StudyGroup,
@@ -74,6 +84,7 @@ module.exports = {
   User: User,
   Reader: Reader,
   Highlight: Highlight,
+  ChatMessage: ChatMessage,
   _SYNC: function(){
     Database.sequelize.sync();
   }

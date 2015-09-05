@@ -3,7 +3,15 @@ var Page = require('../models').Page;
 
 function confirmUserSignedIn(req, res, next){
   if(req.session.userId){
-    next()
+    next();
+  }else{
+    res.sendStatus(403);
+  }
+}
+
+function confirmRightUser(req, res, next){
+  if(req.params.id == req.session.userId){
+    next();
   }else{
     res.sendStatus(403);
   }
@@ -39,5 +47,6 @@ function confirmPageOwner(req, res, next){
 module.exports = {
   confirmUserSignedIn: confirmUserSignedIn,
   confirmStudyGroupOwner: confirmStudyGroupOwner,
-  confirmPageOwner: confirmPageOwner
+  confirmPageOwner: confirmPageOwner,
+  confirmRightUser: confirmRightUser
 }

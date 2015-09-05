@@ -1,7 +1,6 @@
 <ol class="breadcrumb">
   <li class="acitve"><i class="fa fa-home" style="margin-right: 6px;"></i>{{group.name}}</li>
 </ol>
-
 <div class="page-header button-header">
   <h1>{{group.name}}</h1>
 
@@ -12,6 +11,32 @@
   <button class="btn btn-default pull-right" ng-class="{ 'active': isEditing }" ng-click="toggleEditing()" style="margin-right: 10px" ng-if="userSignedIn.id == group.User.id">
     <i class="fa fa-pencil"></i> Edit study group
   </button>
+</div>
+
+<div class="panel" ng-class="{ 'panel-default': alertCounter == 0, 'panel-primary': alertCounter > 0 }" id="chat-container" ng-controller="ChatController">
+  <div class="panel-heading" ng-click="toggleChat()">
+    <h3 class="panel-title"><i class="fa fa-comments"></i> {{group.name}} chat <span class="pull-right" ng-show="alertCounter > 0"><i class="fa fa-bell"></i> {{alertCounter}}</span></h3>
+  </div>
+  <div class="panel-body" ng-show="chatIsShowing">
+    <div id="chat-messages">
+      <div class="media" ng-repeat="message in messages | orderBy: '-createdAt'">
+        <div class="media-left">
+          <img gravatar-src-once="message.User.email" class="mini-portrait media-object" gravatar-size="30" style="margin-right: 2px;">
+        </div>
+        <div class="media-body">
+          <p>
+            <a ng-href="#/profile/{{message.User.username}}">{{message.User.username}}</a>:
+            {{message.text}}
+            <span am-time-ago="message.createdAt" class="text-muted"></span>
+          </p>
+        </div>
+      </div>
+    </div>
+    <form ng-submit="sendChatMessage()">
+      <input type="text" required class="form-control" placeholder="Type your message here..." ng-model="newMessage">
+      <button type="submit" style="display: none"></button>
+    </form>
+  </div>
 </div>
 
 <div class="row">
@@ -25,7 +50,7 @@
     </p>
 
     <p>
-      <img gravatar-src-once="reader.User.email" class="mini-portrait" style="margin: 1px" ng-repeat="reader in group.Readers" tooltip content="reader.User.username">
+      <a ng-href="#/profile/{{reader.User.username}}" ng-repeat="reader in group.Readers" tooltip content="reader.User.username"><img gravatar-src-once="reader.User.email" class="mini-portrait" style="margin: 1px"></a>
     </p>
 
     <div class="form-group" ng-if="userSignedIn.id == group.User.id">
@@ -33,7 +58,7 @@
       <input type="text" ng-model="shareUrl" class="form-control">
     </div>
 
-    <div ng-show="isEditing">
+    <div ng-show="isEditing" ng-if="userSignedIn.id == group.User.id">
       <form ng-submit="updateStudyGroup()">
         <div class="form-group">
           <label>Name</label>

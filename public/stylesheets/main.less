@@ -107,6 +107,24 @@ body#welcome {
   }
 }
 
+#chat-container{
+  position: fixed;
+  bottom: 0px;
+  right: 20px;
+  z-index: 10;
+  width: 400px;
+
+  .panel-heading{
+    cursor: pointer;
+  }
+
+  #chat-messages{
+    max-height: 400px;
+    overflow-y: scroll;
+    margin-bottom: 15px;
+  }
+}
+
 .navbar-brand{
   color: #333 !important;
   font-size: 22px !important;

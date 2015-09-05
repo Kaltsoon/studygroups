@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var auth = require('../utils/authentication');
 var User = require('../models').User;
 
 var hash = require('password-hash');
@@ -70,9 +71,26 @@ router.post('/sign-out', function(req, res, next){
 });
 
 router.get('/:username', function(req, res, next){
-  User.findOne({ where: { username: req.params.username }, attributes: ['username', 'email', 'id', 'createdAt'] })
+  User.findOne({ where: { username: req.params.username }, attributes: ['username', 'email', 'id', 'createdAt', 'description'] })
     .then(function(user){
       res.json(user);
+    });
+});
+
+router.post('/:id/update', auth.confirmUserSignedIn, auth.confirmRightUser, function(req, res, next){
+  var editedUser = req.body;
+
+  User.update(editedUser, { where: { id: req.params.id } })
+    .then(function(){
+      res.sendStatus(200);
+    });
+});
+
+router.post('/:id/remove', auth.confirmUserSignedIn, auth.confirmRightUser, function(req, res, next){
+  User.destroy({ where: { id: req.params.id } })
+    .then(function(){
+      req.session.userId = null;
+      res.sendStatus(200);
     });
 });
 

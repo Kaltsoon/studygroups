@@ -65,8 +65,6 @@ router.post('/create', auth.confirmUserSignedIn, function(req, res, next){
 });
 
 router.post('/:id/remove', auth.confirmUserSignedIn, auth.confirmStudyGroupOwner, function(req, res, next){
-  Page.destroy({ where: { StudyGroupId: req.params.id } });
-
   StudyGroup.destroy({ where: { id: req.params.id } })
     .then(function(){
       res.sendStatus(200);

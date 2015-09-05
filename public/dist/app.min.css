@@ -84,6 +84,21 @@ body#welcome .form-signin input.last {
 .highlighter-container .panel-body .highlight-color.bg-danger {
   background-color: #d9534f !important;
 }
+#chat-container {
+  position: fixed;
+  bottom: 0px;
+  right: 20px;
+  z-index: 10;
+  width: 400px;
+}
+#chat-container .panel-heading {
+  cursor: pointer;
+}
+#chat-container #chat-messages {
+  max-height: 400px;
+  overflow-y: scroll;
+  margin-bottom: 15px;
+}
 .navbar-brand {
   color: #333 !important;
   font-size: 22px !important;
