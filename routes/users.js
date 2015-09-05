@@ -19,13 +19,6 @@ router.post('/sign-in', function(req, res, next){
     });
 });
 
-router.get('/users', function(req, res, next){
-  User.findAll()
-    .then(function(users){
-      res.json(users);
-    })
-});
-
 router.get('/user-signed-in', function(req, res, next){
   if(!req.session.userId){
     res.json({})
@@ -74,6 +67,13 @@ router.post('/sign-out', function(req, res, next){
   req.session.userId = null;
 
   res.sendStatus(200);
+});
+
+router.get('/:username', function(req, res, next){
+  User.findOne({ where: { username: req.params.username }, attributes: ['username', 'email', 'id', 'createdAt'] })
+    .then(function(user){
+      res.json(user);
+    });
 });
 
 module.exports = router;

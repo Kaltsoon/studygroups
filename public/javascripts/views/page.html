@@ -15,10 +15,20 @@
   </button>
 </div>
 
+<span class="highlighter-container">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <span class="highlight-color bg-success" tooltip content="'Well explained!'" ng-click="highlight('success')"></span>
+        <span class="highlight-color bg-warning" tooltip content="'I didn\'t quite get this...'" ng-click="highlight('warning')"></span>
+        <span class="highlight-color bg-danger" tooltip content="'There\'s a serious problem here!'" ng-click="highlight('danger')"></span>
+      </div>
+    </div>
+</span>
+
 <div class="row">
   <div class="col-md-9">
     <p class="text-muted">
-      Created at {{page.createdAt | amDateFormat:'dddd, MMMM Do YYYY' }} · Latest update <span am-time-ago="page.updatedAt"></span>
+      Created at {{page.createdAt | amDateFormat:'MMMM Do YYYY' }} · Latest update <span am-time-ago="page.updatedAt"></span>
     </p>
 
     <div ng-show="isEditing">
@@ -40,7 +50,12 @@
       </form>
     </div>
 
-    <p btf-markdown="page.content" ng-hide="isEditing"></p>
+    <div ng-hide="isEditing">
+      <p>
+        <button class="btn btn-warning" ng-if="userSignedIn.id == page.StudyGroup.User.id" ng-click="removeHighlightings()"><i class="fa fa-eraser"></i> Clear highlightings</button>
+      </p>
+      <p btf-markdown="page.content" highlighter highlight-content="page.content" currently-highlighted-section="currentlyHighlightedSection" highlighted-sections="page.Highlights"></p>
+    </div>
   </div>
 
   <div class="col-md-3">

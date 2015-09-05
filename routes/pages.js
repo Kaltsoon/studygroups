@@ -4,11 +4,12 @@ var auth = require('../utils/authentication');
 var StudyGroup = require('../models').StudyGroup;
 var Page = require('../models').Page;
 var User = require('../models').User;
+var Highlight = require('../models').Highlight;
 
 router.get('/:id', auth.confirmUserSignedIn, function(req, res, next){
   Page.findOne({
     where: { id: req.params.id },
-    include: { model: StudyGroup, include: [{ model: Page, attributes: ['title', 'id', 'StudyGroupId'] }, { model: User, attributes: ['id'] }] }
+    include: [{ model: StudyGroup, include: [{ model: Page, attributes: ['title', 'id'], include: { model: StudyGroup, attributes: ['key', 'id'] } }, { model: User, attributes: ['id'] }] }, { model: Highlight }]
   })
     .then(function(page){
       res.json(page);

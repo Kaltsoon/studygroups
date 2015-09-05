@@ -68,6 +68,45 @@ body#welcome {
   border-radius: 4px;
 }
 
+.large-portrait{
+  width: 100px;
+  height: 100px;
+  border-radius: 4px;
+}
+
+.highlighter-container{
+  z-index: 99;
+
+  .panel-default{
+    background-color: white !important;
+  }
+
+  .panel-body{
+    padding: 6px 6px 2px 6px !important;
+
+    .highlight-color{
+      border-radius: 4px;
+      width: 20px;
+      height: 20px;
+      padding: 1px;
+      display: inline-block;
+      cursor: pointer;
+
+      &.bg-success{
+        background-color: @green !important;
+      }
+
+      &.bg-warning{
+        background-color: @yellow !important;
+      }
+
+      &.bg-danger{
+        background-color: @red !important;
+      }
+    }
+  }
+}
+
 .navbar-brand{
   color: #333 !important;
   font-size: 22px !important;

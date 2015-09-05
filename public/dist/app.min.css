@@ -53,6 +53,37 @@ body#welcome .form-signin input.last {
   margin-right: 10px;
   border-radius: 4px;
 }
+.large-portrait {
+  width: 100px;
+  height: 100px;
+  border-radius: 4px;
+}
+.highlighter-container {
+  z-index: 99;
+}
+.highlighter-container .panel-default {
+  background-color: white !important;
+}
+.highlighter-container .panel-body {
+  padding: 6px 6px 2px 6px !important;
+}
+.highlighter-container .panel-body .highlight-color {
+  border-radius: 4px;
+  width: 20px;
+  height: 20px;
+  padding: 1px;
+  display: inline-block;
+  cursor: pointer;
+}
+.highlighter-container .panel-body .highlight-color.bg-success {
+  background-color: #5cb85c !important;
+}
+.highlighter-container .panel-body .highlight-color.bg-warning {
+  background-color: #f0ad4e !important;
+}
+.highlighter-container .panel-body .highlight-color.bg-danger {
+  background-color: #d9534f !important;
+}
 .navbar-brand {
   color: #333 !important;
   font-size: 22px !important;

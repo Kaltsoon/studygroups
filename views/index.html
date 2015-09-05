@@ -51,6 +51,7 @@
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><img gravatar-src-once="userSignedIn.email" class="mini-portrait"> {{userSignedIn.username}} <span class="caret"></span></a>
               <ul class="dropdown-menu">
                 <li><a href="#/study-groups">Study groups</a></li>
+                <li><a ng-href="#/profile/{{userSignedIn.username}}">Profile</a></li>
                 <li role="separator" class="divider"></li>
                 <li><a ng-click="signOut()" style="cursor: pointer"><i class="fa fa-sign-out"></i> Sign out</a></li>
               </ul>

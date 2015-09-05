@@ -29,6 +29,11 @@ StudyGroupsApp.config(function($routeProvider){
       controller: 'PageController',
       resolve: { userSignedIn: getUserSignedIn }
     })
+    .when('/profile/:username', {
+      templateUrl: '/javascripts/views/profile.html',
+      controller: 'ProfileController',
+      resolve: { userSignedIn: getUserSignedIn }
+    })
     .otherwise({
       redirectTo: '/study-groups'
     });

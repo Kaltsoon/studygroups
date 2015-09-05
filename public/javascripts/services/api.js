@@ -3,6 +3,10 @@ StudyGroupsApp.service('Api', function($http){
     return $http.get('/users/user-signed-in');
   }
 
+  this.getUser = function(username){
+    return $http.get('/users/' + username);
+  }
+
   this.getUsersStudyGroups = function(){
     return $http.get('/study-groups');
   }
@@ -37,6 +41,14 @@ StudyGroupsApp.service('Api', function($http){
 
   this.createPage = function(page){
     return $http.post('/pages/create', page);
+  }
+
+  this.createHighlight = function(highlight){
+    return $http.post('/highlights/create', highlight);
+  }
+
+  this.removeHighlightings = function(pageId){
+    return $http.post('/highlights/remove-all/' + pageId);
   }
 
   this.signOut = function(){

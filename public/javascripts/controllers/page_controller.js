@@ -14,6 +14,25 @@ StudyGroupsApp.controller('PageController', function($scope, $location, $routePa
     $scope.isEditing = !$scope.isEditing;
   }
 
+  $scope.highlight = function(type){
+    if($scope.currentlyHighlightedSection && $scope.currentlyHighlightedSection.split(' ').length >= 3){
+      var highlight = { type: type, text: _.trim($scope.currentlyHighlightedSection) };
+
+      Api.createHighlight(_.extend(highlight, { PageId: $routeParams.pageId }));
+
+      $scope.page.Highlights.push(highlight);
+    }
+  }
+
+  $scope.removeHighlightings = function(){
+    if(confirm('Are you sure you wan\'t to remove all highlightings?')){
+      Api.removeHighlightings($routeParams.pageId)
+        .then(function(){
+          $scope.page.Highlights = [];
+        });
+    }
+  }
+
   $scope.updatePage = function(){
     Api.updatePage($scope.editedPage)
       .then(function(){

@@ -1,0 +1,18 @@
+<div class="page-header button-header">
+  <h1>{{user.username}}</h1>
+
+  <button class="btn btn-default pull-right" ng-class="{ 'active': isEditing }" ng-click="toggleEditing()" style="margin-right: 10px" ng-if="userSignedIn.id == user.id">
+    <i class="fa fa-pencil"></i> Edit profile
+  </button>
+</div>
+
+<div class="media">
+  <div class="media-left">
+    <img gravatar-src-once="user.email" class="large-portrait media-object" gravatar-size="100">
+  </div>
+  <div class="media-body">
+    <p class="text-muted">
+      Member since {{user.createdAt | amDateFormat:'MMMM Do YYYY' }}
+    </p>
+  </div>
+</div>
