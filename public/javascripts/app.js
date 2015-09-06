@@ -39,11 +39,11 @@ StudyGroupsApp.config(function($routeProvider){
     });
 });
 
-StudyGroupsApp.run(function($rootScope, Api){
+StudyGroupsApp.run(function($rootScope, $window, Api){
   $rootScope.signOut = function(){
     Api.signOut()
       .then(function(){
-        window.location.href = '/welcome';
+        $window.location.replace('/welcome');
       })
   }
 });

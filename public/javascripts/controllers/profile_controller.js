@@ -1,4 +1,4 @@
-StudyGroupsApp.controller('ProfileController', function($scope, $routeParams, $location, Api){
+StudyGroupsApp.controller('ProfileController', function($scope, $routeParams, $window, Api){
   $scope.editedUser = {};
 
   Api.getUser($routeParams.username)
@@ -23,7 +23,7 @@ StudyGroupsApp.controller('ProfileController', function($scope, $routeParams, $l
     if(confirm('Are you sure you wan\'t to remove your profile?')){
       Api.removeUser($scope.user.id)
         .then(function(){
-          window.location.href = '/welcome';
+          $window.location.replace('/welcome');
         });
     }
   }

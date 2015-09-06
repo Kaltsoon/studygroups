@@ -1,9 +1,7 @@
-StudyGroupsApp.controller('ChatController', function($scope, $routeParams, $rootScope, Api){
-  var socket = io();
-
+StudyGroupsApp.controller('ChatController', function($scope, $routeParams, $rootScope, Api, SocketIo){
   $scope.alertCounter = 0;
 
-  socket.on('chat-message', function(message){
+  SocketIo.on('chat-message', function(message){
     $scope.$apply(function(){
       if(!$scope.chatIsShowing){
         $scope.alertCounter++;
@@ -13,7 +11,7 @@ StudyGroupsApp.controller('ChatController', function($scope, $routeParams, $root
     });
   });
 
-  Api.getChatMessages($routeParams.id)
+  Api.getChatMessages($routeParams.id || $routeParams.groupId)
     .then(function(messages){
       $scope.messages = messages.data;
     })
@@ -27,10 +25,12 @@ StudyGroupsApp.controller('ChatController', function($scope, $routeParams, $root
   }
 
   $scope.sendChatMessage = function(){
-    var messageToSend = { UserId: $rootScope.userSignedIn.id, createdAt: new Date(), StudyGroupId: $routeParams.id, text: $scope.newMessage, User: $rootScope.userSignedIn };
+    if($scope.newMessage){
+      var messageToSend = { UserId: $rootScope.userSignedIn.id, createdAt: new Date(), StudyGroupId: $routeParams.id || $routeParams.groupId, text: $scope.newMessage, User: $rootScope.userSignedIn };
 
-    socket.emit('chat-message', JSON.stringify(messageToSend));
+      SocketIo.emit('chat-message', JSON.stringify(messageToSend));
 
-    $scope.newMessage = '';
+      $scope.newMessage = '';
+    }
   }
 });

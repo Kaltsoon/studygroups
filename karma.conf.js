@@ -18,6 +18,7 @@ module.exports = function(config) {
       'public/components/moment/min/moment.min.js',
       'public/components/showdown/src/showdown.js',
       'public/components/bootstrap/dist/js/bootstrap.min.js',
+      'public/components/socket.io-client/socket.io.js',
       'public/components/angular/angular.min.js',
       'public/components/angular-mocks/angular-mocks.js',
       'public/components/angular-sanitize/angular-sanitize.min.js',

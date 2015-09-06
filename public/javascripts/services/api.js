@@ -39,8 +39,8 @@ StudyGroupsApp.service('Api', function($http){
     return $http.post('/study-groups/' + group.id + '/update', group);
   }
 
-  this.getPage = function(id){
-    return $http.get('/pages/' + id);
+  this.getPage = function(id, key){
+    return $http.get('/pages/' + id + '/' + key);
   }
 
   this.removePage = function(id){

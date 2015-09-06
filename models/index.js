@@ -86,6 +86,6 @@ module.exports = {
   Highlight: Highlight,
   ChatMessage: ChatMessage,
   _SYNC: function(){
-    Database.sequelize.sync();
+    Database.sequelize.sync({ force: true });
   }
 };

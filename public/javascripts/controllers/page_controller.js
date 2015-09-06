@@ -1,7 +1,7 @@
 StudyGroupsApp.controller('PageController', function($scope, $location, $routeParams, Api){
   $scope.editedPage = {}
 
-  Api.getPage($routeParams.pageId)
+  Api.getPage($routeParams.pageId, $routeParams.key)
     .then(function(page){
       $scope.page = page.data;
       $scope.editedPage = _.pick($scope.page, 'title', 'content', 'id');

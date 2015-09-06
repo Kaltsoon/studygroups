@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "test": "./node_modules/.bin/karma start --single-run"
+    "test": "./node_modules/.bin/karma start",
+    "db": "node ./database/seed.js"
   },
   "dependencies": {
     "body-parser": "~1.12.4",
