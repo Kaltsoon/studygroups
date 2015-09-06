@@ -1,4 +1,4 @@
-var StudyGroupsApp = angular.module('StudyGroupsApp', ['ngRoute', 'angularMoment', 'btford.markdown', 'ui.gravatar']);
+var StudyGroupsApp = angular.module('StudyGroupsApp', ['ngRoute', 'angularMoment', 'btford.markdown', 'ngSanitize', 'ui.gravatar', 'dbaq.emoji']);
 
 StudyGroupsApp.config(function($routeProvider){
   function getUserSignedIn($rootScope, Api){
@@ -10,27 +10,27 @@ StudyGroupsApp.config(function($routeProvider){
 
   $routeProvider
     .when('/study-groups', {
-      templateUrl: '/javascripts/views/study_group_list.html',
+      templateUrl: 'study_group_list.html',
       controller: 'StudyGroupListController',
       resolve: { userSignedIn: getUserSignedIn }
     })
     .when('/study-groups/:id/:key', {
-      templateUrl: '/javascripts/views/study_group.html',
+      templateUrl: 'study_group.html',
       controller: 'StudyGroupController',
       resolve: { userSignedIn: getUserSignedIn }
     })
     .when('/study-groups/:id/:key/new-page', {
-      templateUrl: '/javascripts/views/new_page.html',
+      templateUrl: 'new_page.html',
       controller: 'CreatePageController',
       resolve: { userSignedIn: getUserSignedIn }
     })
     .when('/study-groups/:groupId/:key/pages/:pageId', {
-      templateUrl: '/javascripts/views/page.html',
+      templateUrl: 'page.html',
       controller: 'PageController',
       resolve: { userSignedIn: getUserSignedIn }
     })
     .when('/profile/:username', {
-      templateUrl: '/javascripts/views/profile.html',
+      templateUrl: 'profile.html',
       controller: 'ProfileController',
       resolve: { userSignedIn: getUserSignedIn }
     })

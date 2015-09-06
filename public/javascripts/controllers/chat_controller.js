@@ -2,12 +2,19 @@ StudyGroupsApp.controller('ChatController', function($scope, $routeParams, $root
   $scope.alertCounter = 0;
 
   SocketIo.on('chat-message', function(message){
+    var currentGroupId = $routeParams.id || $routeParams.groupId;
+    var parsedMessage = JSON.parse(message);
+
+    if(parsedMessage.StudyGroupId != currentGroupId){
+      return;
+    }
+
     $scope.$apply(function(){
       if(!$scope.chatIsShowing){
         $scope.alertCounter++;
       }
 
-      $scope.messages.push(JSON.parse(message));
+      $scope.messages.push(parsedMessage);
     });
   });
 
