@@ -6,4 +6,4 @@
 
 * **Work  log, coming soon!**
 * **<a href="https://travis-ci.org/Kaltsoon/studygroups/builds">Travis</a>**
-* **Heroku, coming soon!**
+* **<a href="https://damp-peak-9321.herokuapp.com">Heroku</a>**
