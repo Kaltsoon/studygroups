@@ -29,7 +29,7 @@ module.exports = function(config) {
       'public/components/angular-markdown-directive/markdown.js',
       'public/components/lodash/lodash.min.js',
       'public/dist/app.min.js',
-      'tests/front/*.js'
+      'tests/controllers/*.js'
     ],
 
 

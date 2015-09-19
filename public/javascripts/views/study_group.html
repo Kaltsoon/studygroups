@@ -23,12 +23,13 @@
         No messages yet.
       </p>
 
-      <div class="media" ng-repeat="message in messages | orderBy: '-createdAt'">
+      <div class="media" ng-repeat="message in messages | orderBy: '-createdAt'" ng-if="!message.removed">
         <div class="media-left">
           <img gravatar-src-once="message.User.email" class="mini-portrait media-object" gravatar-size="30" style="margin-right: 2px;">
         </div>
         <div class="media-body">
           <p>
+            <button class="btn btn-xs btn-danger" ng-click="removeChatMessage(message)" ng-if="userSignedIn.id == group.User.id"><i class="fa fa-times"></i></button>
             <a ng-href="#/profile/{{message.User.username}}">{{message.User.username}}</a>:
             <span ng-bind-html="message.text | emoji"></span>
             <span am-time-ago="message.createdAt" class="text-muted"></span>
@@ -49,7 +50,7 @@
 <div class="row">
   <div class="col-md-9">
     <p class="text-muted">
-      Owned by <a ng-href="#/profile/{{group.User.username}}">{{group.User.username}}</a> · Created at {{group.createdAt | amDateFormat:'dddd, MMMM Do YYYY' }} · Latest update <span am-time-ago="group.updatedAt"></span>
+      Owned by <a ng-href="#/profile/{{group.User.username}}">{{group.User.username}}</a> · Created at {{group.createdAt | amDateFormat:'MMMM Do YYYY' }} · Latest update <span am-time-ago="group.updatedAt"></span>
     </p>
 
     <p class="text-muted">
@@ -93,7 +94,9 @@
     </div>
 
     <div ng-show="group.Pages.length > 0">
-      <h4>Pages</h4>
+      <h4>
+        <ng-pluralize count="group.Pages.length" when="{ '0': 'No pages yet', 'one': '1 page', 'other': '{} pages' }">
+      </h4>
       <ul class="nav nav-pills nav-stacked" style="margin-bottom: 10px">
         <li ng-repeat="page in group.Pages">
           <a ng-href="#/study-groups/{{group.id}}/{{group.key}}/pages/{{page.id}}">{{page.title}}</a>

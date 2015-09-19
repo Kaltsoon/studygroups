@@ -35,12 +35,13 @@
         No messages yet.
       </p>
 
-      <div class="media" ng-repeat="message in messages | orderBy: '-createdAt'">
+      <div class="media" ng-repeat="message in messages | orderBy: '-createdAt'" ng-if="!message.removed">
         <div class="media-left">
           <img gravatar-src-once="message.User.email" class="mini-portrait media-object" gravatar-size="30" style="margin-right: 2px;">
         </div>
         <div class="media-body">
           <p>
+            <button class="btn btn-xs btn-danger" ng-click="removeChatMessage(message)" ng-if="userSignedIn.id == page.StudyGroup.User.id"><i class="fa fa-times"></i></button>
             <a ng-href="#/profile/{{message.User.username}}">{{message.User.username}}</a>:
             <span ng-bind-html="message.text | emoji"></span>
             <span am-time-ago="message.createdAt" class="text-muted"></span>
@@ -88,7 +89,41 @@
         <button class="btn btn-warning" ng-if="userSignedIn.id == page.StudyGroup.User.id" ng-click="removeHighlightings()"><i class="fa fa-eraser"></i> Clear highlightings</button>
       </p>
 
-      <p btf-markdown="page.content" highlighter highlight-content="page.content" currently-highlighted-section="currentlyHighlightedSection" highlighted-sections="page.Highlights"></p>
+      <div class="form-group">
+        <label>Filter highlightings</label>
+        <p>
+          <span class="highlight-color bg-success chooseable" ng-class="{ 'chosen': highlightTypes[0].show }" tooltip content="'Well explained!'" ng-click="toggleHighlightType(highlightTypes[0])"></span>
+          <span class="highlight-color bg-warning chooseable" ng-class="{ 'chosen': highlightTypes[1].show }" tooltip content="'I didn\'t quite get this...'" ng-click="toggleHighlightType(highlightTypes[1])"></span>
+          <span class="highlight-color bg-danger chooseable" ng-class="{ 'chosen': highlightTypes[2].show }" tooltip content="'There\'s a serious problem here!'" ng-click="toggleHighlightType(highlightTypes[2])"></span>
+        </p>
+      </div>
+
+      <p btf-markdown="page.content" highlighter highlight-content="page.content" currently-highlighted-section="currentlyHighlightedSection" highlighted-sections="page.Highlights" displayed-types="displayedHighlightTypes"></p>
+
+      <hr>
+
+      <div ng-controller="CommentsController">
+        <h2>
+          <ng-pluralize count="commentCount" when="{ '0': 'No comments yet', 'one': '1 comment', 'other': '{} comments' }">
+        </h2>
+
+        <button class="btn btn-success" ng-click="toggleCommentForm()" ng-class="{ 'active': commentFormIsShowing }"><i class="fa fa-plus"></i> Create a comment</button>
+
+        <form ng-show="commentFormIsShowing" ng-submit="addComment()" style="margin-top: 15px;">
+          <div class="form-group">
+            <p class="text-muted">
+              Tip: you can use <a href="http://www.emoji-cheat-sheet.com/" target="_blank">emojis</a> in this field.
+            </p>
+            <textarea class="form-control" rows="5" ng-model="newComment" required></textarea>
+          </div>
+
+          <div class="form-group">
+            <button class="btn btn-success" type="submit">Create</button>
+          </div>
+        </form>
+
+        <div class="media" ng-repeat="comment in comments | orderBy: '-createdAt' " ng-include="'comment.html'" ng-if="!comment.removed"></div>
+      </div>
     </div>
   </div>
 
@@ -98,7 +133,9 @@
     </div>
 
     <div ng-show="page.StudyGroup.Pages.length > 0">
-      <h4>Pages</h4>
+      <h4>
+        <ng-pluralize count="page.StudyGroup.Pages.length" when="{ '0': 'No pages yet', 'one': '1 page', 'other': '{} pages' }">
+      </h4>
       <ul class="nav nav-pills nav-stacked" style="margin-bottom: 10px">
         <li ng-repeat="p in page.StudyGroup.Pages" ng-class="{ 'active': p.id == page.id }">
           <a ng-href="#/study-groups/{{p.StudyGroup.id}}/{{p.StudyGroup.key}}/pages/{{p.id}}">{{p.title}}</a>
@@ -113,3 +150,57 @@
     </p>
   </div>
 </div>
+
+<script type="text/ng-template" id="comment.html">
+  <div class="media-left">
+    <img class="mini-portrait media-object" gravatar-size="30" gravatar-src-once="comment.User.email">
+  </div>
+  <div class="media-body">
+    <h4 class="media-heading"><a ng-href="#/profile/{{comment.User.username}}">{{comment.User.username}}</a></h4>
+
+    <div ng-hide="comment.editFormIsShowing">
+      <p ng-bind-html="comment.content | emoji">
+      </p>
+
+      <p class="text-muted">
+        {{comment.createdAt | amDateFormat:'MMMM Do YYYY, h:mm a' }}
+      </p>
+    </div>
+
+    <form ng-show="comment.editFormIsShowing" ng-if="comment.User.id == userSignedIn.id" ng-submit="updateComment(comment)">
+      <div class="form-group">
+        <p class="text-muted">
+          Tip: you can use <a href="http://www.emoji-cheat-sheet.com/" target="_blank">emojis</a> in this field.
+        </p>
+
+        <textarea ng-model="comment.editedContent" class="form-control" rows="5" required></textarea>
+      </div>
+
+      <div class="form-group">
+        <button class="btn btn-default" type="submit">Save</button>
+      </div>
+    </form>
+
+    <p>
+      <button ng-if="comment.User.id == userSignedIn.id" class="btn btn-xs btn-default" ng-class="{ 'active': comment.editFormIsShowing }" ng-click="toggleCommentEditForm(comment)"><i class="fa fa-pencil"></i> Edit</button>
+      <button class="btn btn-xs btn-default" ng-class="{ 'active': comment.replyFormIsShowing }" ng-click="toggleReplyForm(comment)"><i class="fa fa-reply"></i> Reply</button>
+      <button ng-if="comment.Page.StudyGroup.UserId == userSignedIn.id || comment.UserId == userSignedIn.id" ng-click="removeComment(comment)" class="btn btn-xs btn-danger"><i class="fa fa-times"></i> Remove</button>
+    </p>
+
+    <form ng-show="comment.replyFormIsShowing" ng-submit="addReply(comment, newReply); newReply = ''">
+      <div class="form-group">
+        <p class="text-muted">
+          Tip: you can use <a href="http://www.emoji-cheat-sheet.com/" target="_blank">emojis</a> in this field.
+        </p>
+
+        <textarea ng-model="newReply" class="form-control" rows="5" required></textarea>
+      </div>
+
+      <div class="form-group">
+        <button class="btn btn-default" type="submit">Reply</button>
+      </div>
+    </form>
+
+    <div class="media" ng-repeat="comment in comment.replies | orderBy: '-createdAt' " ng-include="'comment.html'" ng-if="!comment.removed"></div>
+  </div>
+</script>

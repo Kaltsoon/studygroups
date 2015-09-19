@@ -33,6 +33,9 @@ router.post('/:id/update', auth.confirmUserSignedIn, auth.confirmPageOwner, func
   Page.update(editedPage, { where: { id: req.params.id }})
     .then(function(){
       res.sendStatus(200);
+    })
+    .catch(function(error){
+      res.sendStatus(400);
     });
 });
 
@@ -42,6 +45,9 @@ router.post('/create', auth.confirmUserSignedIn, auth.confirmStudyGroupOwner, fu
   Page.create(newPage)
     .then(function(createdPage){
       res.json(createdPage);
+    })
+    .catch(function(error){
+      res.sendStatus(400);
     });
 });
 

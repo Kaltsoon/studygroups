@@ -23,6 +23,15 @@ StudyGroupsApp.controller('ChatController', function($scope, $routeParams, $root
       $scope.messages = messages.data;
     })
 
+  $scope.removeChatMessage = function(message){
+    if(confirm('Are you sure you wan\'t to remove this message?')){
+      Api.removeChatMessage(message.id)
+        .then(function(){
+          message.removed = true;
+        });
+    }
+  }
+
   $scope.toggleChat = function(){
     $scope.chatIsShowing = !$scope.chatIsShowing;
 

@@ -24,6 +24,10 @@ describe('CreatePageController', function(){
           then: function(callback){
             page.id = 1;
             callback({ data: page });
+
+            return {
+              catch: function(callback){ callback(); }
+            }
           }
         }
       }

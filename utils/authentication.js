@@ -1,5 +1,7 @@
 var StudyGroup = require('../models').StudyGroup;
 var Page = require('../models').Page;
+var ChatMessage = require('../models').ChatMessage;
+var Comment = require('../models').Comment;
 
 function confirmUserSignedIn(req, res, next){
   if(req.session.userId){
@@ -44,9 +46,51 @@ function confirmPageOwner(req, res, next){
     });
 }
 
+function confirmStudyGroupOwnerOfChatMessage(req, res, next){
+  ChatMessage.findOne({
+    where: { id: req.params.id },
+    include: { model: StudyGroup }
+  })
+    .then(function(message){
+      if(!message || !message.StudyGroup || message.StudyGroup.UserId != req.session.userId){
+        res.sendStatus(403);
+      }else{
+        next();
+      }
+    });
+}
+
+function confirmCommentOwner(req, res, next){
+  Comment.findOne({ where: { id: req.params.id } })
+    .then(function(comment){
+      if(!comment || comment.UserId != req.session.userId){
+        res.sendStatus(403);
+      }else{
+        next();
+      }
+    });
+}
+
+function confirmStudyGroupOwnerOrOwnerOfComment(req, res, next){
+  Comment.findOne({
+    where: { id: req.params.id },
+    include: { model: Page, attributes: ['id'], include: { model: StudyGroup, attributes: ['UserId'] }  }
+  })
+    .then(function(comment){
+      if(comment && ( comment.Page.StudyGroup.UserId == req.session.userId || comment.UserId == req.session.userId )){
+        next();
+      }else{
+        res.sendStatus(403);
+      }
+    });
+}
+
 module.exports = {
   confirmUserSignedIn: confirmUserSignedIn,
   confirmStudyGroupOwner: confirmStudyGroupOwner,
   confirmPageOwner: confirmPageOwner,
-  confirmRightUser: confirmRightUser
+  confirmRightUser: confirmRightUser,
+  confirmCommentOwner: confirmCommentOwner,
+  confirmStudyGroupOwnerOrOwnerOfComment: confirmStudyGroupOwnerOrOwnerOfComment,
+  confirmStudyGroupOwnerOfChatMessage: confirmStudyGroupOwnerOfChatMessage
 }

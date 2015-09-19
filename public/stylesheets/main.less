@@ -75,6 +75,39 @@ body#welcome {
   border-radius: 4px;
 }
 
+.highlight-color{
+  border-radius: 4px;
+  width: 20px;
+  height: 20px;
+  padding: 1px;
+  display: inline-block;
+  cursor: pointer;
+
+  &.chooseable{
+    opacity: 0.5;
+  }
+
+  &.chosen{
+    opacity: 1;
+  }
+
+  &.bg-success{
+    background-color: @green !important;
+  }
+
+  &.bg-warning{
+    background-color: @yellow !important;
+  }
+
+  &.bg-danger{
+    background-color: @red !important;
+  }
+}
+
+.highlighted-text{
+  text-decoration: none;
+}
+
 .highlighter-container{
   z-index: 99;
 
@@ -84,27 +117,40 @@ body#welcome {
 
   .panel-body{
     padding: 6px 6px 2px 6px !important;
+  }
+}
 
-    .highlight-color{
-      border-radius: 4px;
-      width: 20px;
-      height: 20px;
-      padding: 1px;
-      display: inline-block;
-      cursor: pointer;
+.ng-invalid.ng-touched{
+  border-color: #A94442 !important;
 
-      &.bg-success{
-        background-color: @green !important;
-      }
+  &:focus{
+    box-shadow: 0px 0px 8px fadeout(#A94442, 40%);
+  }
+}
 
-      &.bg-warning{
-        background-color: @yellow !important;
-      }
+.ng-valid.ng-touched{
+  border-color: #3C763D;
 
-      &.bg-danger{
-        background-color: @red !important;
-      }
-    }
+  &:focus{
+    box-shadow: 0px 0px 8px fadeout(#3C763D, 40%);
+  }
+}
+
+#error-container{
+  width: 100%;
+  position: fixed;
+  background-color: @red;
+  color: white;
+  text-align: center;
+  font-weight: bold;
+  bottom: -50px;
+  left: 0px;
+  padding: 15px;
+  transition: 0.5s;
+
+  &.bring-up{
+    bottom: 0px;
+    transition: 0.5s;
   }
 }
 

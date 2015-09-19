@@ -65,6 +65,32 @@ body#welcome .form-signin input.last {
   height: 100px;
   border-radius: 4px;
 }
+.highlight-color {
+  border-radius: 4px;
+  width: 20px;
+  height: 20px;
+  padding: 1px;
+  display: inline-block;
+  cursor: pointer;
+}
+.highlight-color.chooseable {
+  opacity: 0.5;
+}
+.highlight-color.chosen {
+  opacity: 1;
+}
+.highlight-color.bg-success {
+  background-color: #5cb85c !important;
+}
+.highlight-color.bg-warning {
+  background-color: #f0ad4e !important;
+}
+.highlight-color.bg-danger {
+  background-color: #d9534f !important;
+}
+.highlighted-text {
+  text-decoration: none;
+}
 .highlighter-container {
   z-index: 99;
 }
@@ -74,22 +100,33 @@ body#welcome .form-signin input.last {
 .highlighter-container .panel-body {
   padding: 6px 6px 2px 6px !important;
 }
-.highlighter-container .panel-body .highlight-color {
-  border-radius: 4px;
-  width: 20px;
-  height: 20px;
-  padding: 1px;
-  display: inline-block;
-  cursor: pointer;
+.ng-invalid.ng-touched {
+  border-color: #A94442 !important;
 }
-.highlighter-container .panel-body .highlight-color.bg-success {
-  background-color: #5cb85c !important;
+.ng-invalid.ng-touched:focus {
+  box-shadow: 0px 0px 8px rgba(169, 68, 66, 0.6);
 }
-.highlighter-container .panel-body .highlight-color.bg-warning {
-  background-color: #f0ad4e !important;
+.ng-valid.ng-touched {
+  border-color: #3C763D;
 }
-.highlighter-container .panel-body .highlight-color.bg-danger {
-  background-color: #d9534f !important;
+.ng-valid.ng-touched:focus {
+  box-shadow: 0px 0px 8px rgba(60, 118, 61, 0.6);
+}
+#error-container {
+  width: 100%;
+  position: fixed;
+  background-color: #d9534f;
+  color: white;
+  text-align: center;
+  font-weight: bold;
+  bottom: -50px;
+  left: 0px;
+  padding: 15px;
+  transition: 0.5s;
+}
+#error-container.bring-up {
+  bottom: 0px;
+  transition: 0.5s;
 }
 #chat-container {
   position: fixed;

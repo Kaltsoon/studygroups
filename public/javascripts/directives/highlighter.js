@@ -1,3 +1,66 @@
+jQuery.extend({
+    highlight: function (node, re, nodeName, className) {
+        if (node.nodeType === 3) {
+            var match = node.data.match(re);
+            if (match) {
+                var highlight = document.createElement(nodeName || 'span');
+                highlight.className = className || 'highlight';
+                var wordNode = node.splitText(match.index);
+                wordNode.splitText(match[0].length);
+                var wordClone = wordNode.cloneNode(true);
+                highlight.appendChild(wordClone);
+                wordNode.parentNode.replaceChild(highlight, wordNode);
+                return 1; //skip added node in parent
+            }
+        } else if ((node.nodeType === 1 && node.childNodes) && // only element nodes that have children
+                !/(script|style)/i.test(node.tagName) && // ignore script and style nodes
+                !(node.tagName === nodeName.toUpperCase() && node.className === className)) { // skip if already highlighted
+            for (var i = 0; i < node.childNodes.length; i++) {
+                i += jQuery.highlight(node.childNodes[i], re, nodeName, className);
+            }
+        }
+        return 0;
+    }
+});
+
+jQuery.fn.unhighlight = function (options) {
+    var settings = { className: 'highlight', element: 'span' };
+    jQuery.extend(settings, options);
+
+    return this.find(settings.element + "." + settings.className).each(function () {
+        var parent = this.parentNode;
+        parent.replaceChild(this.firstChild, this);
+        parent.normalize();
+    }).end();
+};
+
+jQuery.fn.highlight = function (words, options) {
+    var settings = { className: 'highlight', element: 'span', caseSensitive: false, wordsOnly: false };
+    jQuery.extend(settings, options);
+
+    if (words.constructor === String) {
+        words = [words];
+    }
+    words = jQuery.grep(words, function(word, i){
+      return word != '';
+    });
+    words = jQuery.map(words, function(word, i) {
+      return word.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+    });
+    if (words.length == 0) { return this; };
+
+    var flag = settings.caseSensitive ? "" : "i";
+    var pattern = "(" + words.join("|") + ")";
+    if (settings.wordsOnly) {
+        pattern = "\\b" + pattern + "\\b";
+    }
+    var re = new RegExp(pattern, flag);
+
+    return this.each(function () {
+        jQuery.highlight(this, re, settings.element, settings.className);
+    });
+};
+
 (function ($) {
     /*
      * Code for triple click from
@@ -239,23 +302,66 @@ StudyGroupsApp.directive('highlighter', function(){
     scope: {
       highlightContent: '=',
       currentlyHighlightedSection: '=',
-      highlightedSections: '='
+      highlightedSections: '=',
+      displayedTypes: '='
     },
     link: function(scope, elem, attrs){
-      function highlight(){
-        if(scope.highlightedSections.length == 0){
-          $(elem).find('.highlighted-text').contents().unwrap();
-        };
+      function highlighter(text, words){
+      	  var highlightBuilder = '';
+          var textPointer = 0;
+          var wordsPointer = 0;
+          var startPoint = 0;
 
-        var updatedContent = $(elem).html();
+          while(textPointer < text.length){
+          	var nextChar = text[textPointer];
+
+              while(nextChar == '<' && textPointer < text.length){
+              	textPointer = text.indexOf('>', textPointer) + 1;
+                nextChar = text[textPointer];
+              }
+
+              if(nextChar == words[wordsPointer]){
+              	if(wordsPointer == 0){
+                  	startPoint = textPointer;
+                  }
+
+                  highlightBuilder += nextChar;
+                  wordsPointer++;
+              }else{
+              	highlightBuilder = '';
+                  wordsPointer = 0;
+              }
+
+              textPointer++;
+
+              if(highlightBuilder == words){
+              	break;
+              }
+          }
+
+          return { start: startPoint, end: textPointer }
+      }
+
+      function highlight(){
+        if(!scope.highlightedSections){
+          return;
+        }
+
+        $(elem).find('.highlighted-text').contents().unwrap();
 
         scope.highlightedSections.forEach(function(section){
-          var textIndex = updatedContent.indexOf(section.text);
-          updatedContent = updatedContent.substring(0, textIndex) + '<span data-id="' + section.id + '" class="highlighted-text bg-' + section.type + '">' + updatedContent.substring(textIndex, textIndex + section.text.length) + '</span>' + updatedContent.substring(textIndex + section.text.length, updatedContent.length);
-        });
+          if(scope.displayedTypes.indexOf(section.type) >= 0){
+            var currentContent = $(elem).html();
+            var bounds = highlighter(currentContent, section.text);
 
-        $(elem).html(updatedContent);
+            elem.html(currentContent.substring(0, bounds.start) + '<u class="highlighted-text ' + 'bg-' + section.type + '">' + currentContent.substring(bounds.start, bounds.end) + '</u>' + currentContent.substring(bounds.end, currentContent.length));
+          }
+        });
       }
+
+      scope.$watch('displayedTypes', function(types){
+        highlight();
+      }, true);
 
       scope.$watch('highlightedSections', function(sections){
         if($(elem).html()){

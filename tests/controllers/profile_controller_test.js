@@ -8,8 +8,15 @@ describe('ProfileController', function(){
       path: function(path){}
     }
 
+    rootScopeMock = {}
+
     var dummyCallback = {
-      then: function(callback){ callback() }
+      then: function(callback){
+        callback()
+        return {
+          catch: function(callback){ callback() }
+        }
+      }
     };
 
     apiMock = {
@@ -46,6 +53,7 @@ describe('ProfileController', function(){
         $location: locationMock,
         $routeParams: routeParamsMock,
         $window: windowMock,
+        $rootScope: rootScopeMock,
         Api: apiMock
       });
     });

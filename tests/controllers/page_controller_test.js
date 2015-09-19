@@ -15,7 +15,12 @@ describe('PageController', function(){
     }
 
     var dummyCallback = {
-      then: function(callback){ callback() }
+      then: function(callback){
+        callback();
+        return {
+          catch: function(callback){ callback(); }
+        }
+      }
     };
 
     apiMock = {
@@ -116,5 +121,12 @@ describe('PageController', function(){
 
     expect(apiMock.removeHighlightings).toHaveBeenCalledWith(1);
     expect(scope.page.Highlights.length).toBe(0);
+  });
+
+  it('should be able to filter highlightings', function(){
+    expect(scope.displayedHighlightTypes.length).toBe(3);
+    scope.toggleHighlightType(scope.highlightTypes[0]);
+    expect(scope.displayedHighlightTypes.length).toBe(2);
+    expect(scope.displayedHighlightTypes).not.toContain('success');
   });
 });

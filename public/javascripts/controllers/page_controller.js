@@ -1,5 +1,7 @@
-StudyGroupsApp.controller('PageController', function($scope, $location, $routeParams, Api){
+StudyGroupsApp.controller('PageController', function($scope, $location, $routeParams, $rootScope, Api){
   $scope.editedPage = {}
+  $scope.highlightTypes = [{ type: 'success', show: true }, { type: 'warning', show: true }, { type: 'danger', show: true }];
+  $scope.displayedHighlightTypes = ['success', 'warning', 'danger'];
 
   Api.getPage($routeParams.pageId, $routeParams.key)
     .then(function(page){
@@ -12,6 +14,12 @@ StudyGroupsApp.controller('PageController', function($scope, $location, $routePa
 
   $scope.toggleEditing = function(){
     $scope.isEditing = !$scope.isEditing;
+  }
+
+  $scope.toggleHighlightType = function(type){
+    type.show = !type.show;
+
+    $scope.displayedHighlightTypes = _($scope.highlightTypes).where({ show: true }).map(function(type){ return type.type }).value();
   }
 
   $scope.highlight = function(type){
@@ -38,6 +46,9 @@ StudyGroupsApp.controller('PageController', function($scope, $location, $routePa
       .then(function(){
         $scope.isEditing = false;
         _.extend($scope.page, $scope.editedPage);
+      })
+      .catch(function(){
+        $rootScope.showInputError = true;
       });
   }
 

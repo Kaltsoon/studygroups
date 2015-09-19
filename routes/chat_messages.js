@@ -16,4 +16,11 @@ router.get('/from-group/:id', auth.confirmUserSignedIn, function(req, res, next)
     })
 });
 
+router.post('/:id/remove', auth.confirmUserSignedIn, auth.confirmStudyGroupOwnerOfChatMessage, function(req, res, next){
+  ChatMessage.destroy({ where: { id: req.params.id } })
+    .then(function(){
+      res.sendStatus(200);
+    });
+});
+
 module.exports = router;

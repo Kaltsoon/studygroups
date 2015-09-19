@@ -1,4 +1,4 @@
-StudyGroupsApp.controller('StudyGroupController', function($scope, $location, $routeParams, Api){
+StudyGroupsApp.controller('StudyGroupController', function($scope, $location, $routeParams, $rootScope, Api){
   $scope.editedGroup = {};
 
   $scope.shareUrl = $location.absUrl();
@@ -21,6 +21,9 @@ StudyGroupsApp.controller('StudyGroupController', function($scope, $location, $r
       .then(function(){
         $scope.isEditing = false;
         _.extend($scope.group, $scope.editedGroup);
+      })
+      .catch(function(){
+        $rootScope.showInputError = true;
       });
   }
 

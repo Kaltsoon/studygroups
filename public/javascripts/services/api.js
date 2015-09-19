@@ -19,6 +19,10 @@ StudyGroupsApp.service('Api', function($http){
     return $http.get('/chat-messages/from-group/' + groupId);
   }
 
+  this.removeChatMessage = function(messageId){
+    return $http.post('/chat-messages/' + messageId + '/remove');
+  }
+
   this.getUsersStudyGroups = function(){
     return $http.get('/study-groups');
   }
@@ -37,6 +41,22 @@ StudyGroupsApp.service('Api', function($http){
 
   this.updateStudyGroup = function(group){
     return $http.post('/study-groups/' + group.id + '/update', group);
+  }
+
+  this.getComments = function(pageId){
+    return $http.get('/comments/from-page/' + pageId);
+  }
+
+  this.createComment = function(comment){
+    return $http.post('/comments/create', comment);
+  }
+
+  this.updateComment = function(comment){
+    return $http.post('/comments/' + comment.id + '/update', comment);
+  }
+
+  this.removeComment = function(id){
+    return $http.post('/comments/' + id + '/remove');
   }
 
   this.getPage = function(id, key){

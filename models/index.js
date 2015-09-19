@@ -2,8 +2,8 @@ var Database = require('../database/connection');
 
 var Page = Database.sequelize.define('Page', {
   id: { type: Database.DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
-  title: { type: Database.DataTypes.STRING, validate: { notEmpty: { msg: 'Title can\'t be empty.' } } },
-  content: { type: Database.DataTypes.TEXT, validate: { notEmpty: { msg: 'Content can\'t be empty.' } } }
+  title: { type: Database.DataTypes.STRING, allowNull: false },
+  content: { type: Database.DataTypes.TEXT, allowNull: false }
 });
 
 var User = Database.sequelize.define('User', {
@@ -36,8 +36,8 @@ var Reader = Database.sequelize.define('Reader', {
 
 var StudyGroup = Database.sequelize.define('StudyGroup', {
   id: { type: Database.DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
-  name: { type: Database.DataTypes.STRING, validate: { notEmpty: { msg: 'Name can\'t be empty.' } } },
-  description: { type: Database.DataTypes.TEXT, validate: { notEmpty: { msg: 'Description can\'t be empty.' } } },
+  name: { type: Database.DataTypes.STRING, allowNull: false },
+  description: { type: Database.DataTypes.TEXT, allowNull: false },
   key: Database.DataTypes.TEXT
 }, {
   scopes: {
@@ -52,13 +52,18 @@ var StudyGroup = Database.sequelize.define('StudyGroup', {
 
 var Highlight = Database.sequelize.define('Highlight', {
   id: { type: Database.DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
-  text: { type: Database.DataTypes.TEXT, validate: { notEmpty: true } },
+  text: { type: Database.DataTypes.TEXT, allowNull: false },
   type: { type: Database.DataTypes.STRING, validate: { isIn: [['success', 'warning', 'danger']] } }
 });
 
 var ChatMessage = Database.sequelize.define('ChatMessage', {
   id: { type: Database.DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
-  text: { type: Database.DataTypes.TEXT, validate: { notEmpty: true } }
+  text: { type: Database.DataTypes.TEXT, allowNull: false }
+});
+
+var Comment = Database.sequelize.define('Comment', {
+  id: { type: Database.DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
+  content: { type: Database.DataTypes.TEXT, allowNull: false }
 });
 
 Reader.belongsTo(User, { onDelete: 'CASCADE' });
@@ -69,6 +74,9 @@ Highlight.belongsTo(User, { onDelete: 'CASCADE' });
 Highlight.belongsTo(Page, { onDelete: 'CASCADE' });
 ChatMessage.belongsTo(User, { onDelete: 'CASCADE' });
 ChatMessage.belongsTo(StudyGroup, { onDelete: 'CASCADE' });
+Comment.belongsTo(User, { onDelete: 'CASCADE' });
+Comment.belongsTo(Page, { onDelete: 'CASCADE' });
+Comment.belongsTo(Comment, { onDelete: 'CASCADE' });
 
 StudyGroup.hasMany(Page, { onDelete: 'CASCADE' });
 StudyGroup.hasMany(Reader, { onDelete: 'CASCADE' });
@@ -85,6 +93,7 @@ module.exports = {
   Reader: Reader,
   Highlight: Highlight,
   ChatMessage: ChatMessage,
+  Comment: Comment,
   _SYNC: function(){
     Database.sequelize.sync({ force: true });
   }

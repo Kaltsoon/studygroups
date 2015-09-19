@@ -16,6 +16,9 @@ StudyGroupsApp.controller('CreatePageController', function($scope, $location, $r
     Api.createPage($scope.newPage)
       .then(function(page){
         $location.path('/study-groups/' + $routeParams.id + '/' + $routeParams.key + '/pages/' + page.data.id);
+      })
+      .catch(function(){
+        $rootScope.showInputError = true;
       });
   }
 });

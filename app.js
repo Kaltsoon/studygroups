@@ -12,6 +12,7 @@ var studyGroups = require('./routes/groups');
 var pages = require('./routes/pages');
 var highlights = require('./routes/highlights');
 var chatMessages = require('./routes/chat_messages');
+var comments = require('./routes/comments');
 
 var app = express();
 
@@ -38,6 +39,7 @@ app.use('/study-groups', studyGroups);
 app.use('/pages', pages);
 app.use('/highlights', highlights);
 app.use('/chat-messages', chatMessages);
+app.use('/comments', comments);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

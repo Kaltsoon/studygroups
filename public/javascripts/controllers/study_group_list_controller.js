@@ -1,4 +1,4 @@
-StudyGroupsApp.controller('StudyGroupListController', function($scope, $location, Api){
+StudyGroupsApp.controller('StudyGroupListController', function($scope, $location, $rootScope, Api){
   Api.getUsersStudyGroups()
     .then(function(groups){
       $scope.groups = groups.data;
@@ -14,6 +14,9 @@ StudyGroupsApp.controller('StudyGroupListController', function($scope, $location
     Api.createStudyGroup($scope.newStudyGroup)
       .then(function(group){
         $location.path('/study-groups/' + group.data.id + '/' + group.data.key);
+      })
+      .catch(function(){
+        $rootScope.showInputError = true;
       });
   }
 });

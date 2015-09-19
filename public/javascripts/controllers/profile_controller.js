@@ -1,4 +1,4 @@
-StudyGroupsApp.controller('ProfileController', function($scope, $routeParams, $window, Api){
+StudyGroupsApp.controller('ProfileController', function($scope, $routeParams, $window, $rootScope, Api){
   $scope.editedUser = {};
 
   Api.getUser($routeParams.username)
@@ -16,6 +16,9 @@ StudyGroupsApp.controller('ProfileController', function($scope, $routeParams, $w
       .then(function(){
         $scope.isEditing = false;
         _.extend($scope.user, $scope.editedUser);
+      })
+      .catch(function(){
+        $rootScope.showInputError = true;
       });
   }
 

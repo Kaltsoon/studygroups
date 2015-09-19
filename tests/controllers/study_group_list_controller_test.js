@@ -16,7 +16,12 @@ describe('StudyGroupListController', function(){
       },
       createStudyGroup: function(){
         return {
-          then: function(callback){ callback({ data: { name: 'Luotu ryhmä', id: 1, key: 'abc' } }) }
+          then: function(callback){
+            callback({ data: { name: 'Luotu ryhmä', id: 1, key: 'abc' } })
+            return {
+              catch: function(callback){ callback() }
+            }
+          }
         }
       }
     }

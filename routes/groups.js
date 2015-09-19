@@ -50,7 +50,7 @@ router.get('/:id/pages/:pageId', auth.confirmUserSignedIn, function(req, res, ne
   })
     .then(function(page){
       res.json(page);
-    });
+    })
 });
 
 router.post('/create', auth.confirmUserSignedIn, function(req, res, next){
@@ -61,6 +61,9 @@ router.post('/create', auth.confirmUserSignedIn, function(req, res, next){
   StudyGroup.create(newGroup)
     .then(function(createdGroup){
       res.json(createdGroup);
+    })
+    .catch(function(error){
+      res.sendStatus(400);
     });
 });
 
@@ -77,6 +80,9 @@ router.post('/:id/update', auth.confirmUserSignedIn, auth.confirmStudyGroupOwner
   StudyGroup.update(editedGroup, { where: { id: req.params.id } })
     .then(function(){
       res.sendStatus(200);
+    })
+    .catch(function(error){
+      res.sendStatus(400);
     });
 });
 

@@ -70,6 +70,10 @@
       <div ng-view id="content-container"></div>
     </div>
 
+    <div id="error-container" ng-class="{ 'bring-up': showInputError }" ng-click="showInputError = false">
+      Something went wrong! Please, make sure you didn't leave any empty fields.
+    </div>
+
     <script>
       $('.dropdown-toggle').on('click', function(e){ e.preventDefault() });
     </script>

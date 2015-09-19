@@ -15,7 +15,13 @@ describe('StudyGroupController', function(){
     }
 
     var dummyCallback = {
-      then: function(callback){ callback() }
+      then: function(callback){
+        callback()
+
+        return {
+          catch: function(callback){ callback() }
+        }
+      }
     };
 
     apiMock = {

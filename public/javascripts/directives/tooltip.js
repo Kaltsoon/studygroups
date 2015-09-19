@@ -4,8 +4,14 @@ StudyGroupsApp.directive('tooltip', function(){
       content: '='
     },
     restrict: 'A',
-    link: function(scope, element, attrs){
-      $(element).tooltip({ container: 'body', title: scope.content });
+    link: function(scope, elem, attrs){
+      scope.$watch('content', function(){
+        $(elem).tooltip({ container: 'body', title: scope.content });
+      });
+
+      $(elem).on('click', function(){
+        $(elem).tooltip('hide');
+      });
     }
   };
 });
