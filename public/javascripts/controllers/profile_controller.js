@@ -1,10 +1,14 @@
 StudyGroupsApp.controller('ProfileController', function($scope, $routeParams, $window, $rootScope, Api){
   $scope.editedUser = {};
 
+  $rootScope.loading = true;
+
   Api.getUser($routeParams.username)
     .then(function(user){
       $scope.user = user.data;
       $scope.editedUser = _.pick($scope.user, 'email', 'description', 'id');
+
+      $rootScope.loading = false;
     })
 
   $scope.toggleEditing = function(){

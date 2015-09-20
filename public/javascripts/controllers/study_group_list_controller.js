@@ -1,7 +1,11 @@
 StudyGroupsApp.controller('StudyGroupListController', function($scope, $location, $rootScope, Api){
+  $rootScope.loading = true;
+
   Api.getUsersStudyGroups()
     .then(function(groups){
       $scope.groups = groups.data;
+
+      $rootScope.loading = false;
     });
 
   $scope.newStudyGroup = {};

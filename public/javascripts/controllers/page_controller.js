@@ -3,10 +3,14 @@ StudyGroupsApp.controller('PageController', function($scope, $location, $routePa
   $scope.highlightTypes = [{ type: 'success', show: true }, { type: 'warning', show: true }, { type: 'danger', show: true }];
   $scope.displayedHighlightTypes = ['success', 'warning', 'danger'];
 
+  $rootScope.loading = true;
+
   Api.getPage($routeParams.pageId, $routeParams.key)
     .then(function(page){
       $scope.page = page.data;
       $scope.editedPage = _.pick($scope.page, 'title', 'content', 'id');
+
+      $rootScope.loading = false;
     })
     .catch(function(){
       $location.path('/study-groups');
