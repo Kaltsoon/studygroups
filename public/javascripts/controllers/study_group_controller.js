@@ -1,12 +1,15 @@
 StudyGroupsApp.controller('StudyGroupController', function($scope, $location, $routeParams, $rootScope, Api){
   $scope.editedGroup = {};
-
   $scope.shareUrl = $location.absUrl();
+
+  $rootScope.loading = true;
 
   Api.getStudyGroup($routeParams.id, $routeParams.key)
     .then(function(group){
       $scope.group = group.data;
       $scope.editedGroup = _.pick($scope.group, 'name', 'description', 'id');
+
+      $rootScope.loading = false;
     })
     .catch(function(){
       $location.path('/study-groups');
